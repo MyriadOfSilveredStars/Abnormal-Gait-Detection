@@ -14,8 +14,7 @@ import numpy
 def change_dir():
 
     try:
-        os.chdir(".venv")
-        os.chdir("all_data")
+        os.chdir("data")
     except:
         print("Already in that location!")
 
