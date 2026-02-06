@@ -1,0 +1,9 @@
+Naming Conventions for .csv Files
+
+Example: vol0LWN.csv
+vol0 : the number of the volunteer
+L : which sensor, can be L (left), R (right), or P (pocket)
+W : which location, can be W (wall), C (corridor), or Z (ziggurat field)
+N : which gait type, can be N (normal), T (toe), F (flat), S (skewed), or A (all at once)
+
+As each letter is unique, can sort the data by checking for specific letters in the string
