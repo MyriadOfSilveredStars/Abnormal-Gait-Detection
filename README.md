@@ -1,5 +1,7 @@
 Detecting and Correcting Abnormal Gaits with Music
+
 Third Year Project by Rho Bates
+
 Project Supervisor: Dr Jacob Newman
 
 Contact: tyb23mnu@uea.ac.uk
