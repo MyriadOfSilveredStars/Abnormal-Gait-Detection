@@ -4,10 +4,40 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+from matplotlib.backends.backend_pdf import PdfPages
 
 #from clean_files import main_clean
 from extract_data_new import main_extract
 from percenttime import main_percent
+
+def print_all_traindata(train_data, all_ids):
+    #train data is the formatted data for the machine
+
+    print(len(train_data))
+    print(len(all_ids))
+
+    id_counter = 0
+    os.chdir("..")
+    pdf = PdfPages('allGraphs.pdf')
+
+    for ind in train_data:
+        x_axis = list(range(0, len(ind)))
+
+        plt.figure(figsize=(8,6))
+
+        plt.plot(x_axis, ind)
+        plt.ylim(-100, 800)
+        plt.title("Plot for " + all_ids[id_counter])
+        plt.xlabel("Time")
+        plt.ylabel("Peaks and Troughs of Acceleration")
+
+        id_counter += 1
+
+        pdf.savefig()
+        plt.close()
+        #plt.show()
+    pdf.close()
+
 
 
 def select_data(data):
@@ -98,4 +128,4 @@ def main():
     except:
         print("The selection didn't return four indices so it broke :(")
 
-main()
+#main()

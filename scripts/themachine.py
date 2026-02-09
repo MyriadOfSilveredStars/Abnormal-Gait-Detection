@@ -33,6 +33,13 @@ fouriered = main_fourier(dataset)
 
 percentaged = main_percent(data)
 
+def get_all_names(dataset):
+    all_ids = []
+    for data in dataset:
+        all_ids.append(data["id"])
+
+    return all_ids
+
 def get_Y_and_X_fourier(percentaged_dataset):
     X_stuff = []
     Y_stuff = []
@@ -76,7 +83,8 @@ def get_X_Y_Raw(virgin_data):
 
     return X_stuff, Y_stuff
 
-    
+all_ids = get_all_names(percentaged) #get all the ids for graphing
+
 
 X_mine, Y_mine = get_Y_and_X_percent(percentaged)
 #X_mine, Y_mine = get_Y_and_X_fourier(fouriered)
@@ -86,6 +94,10 @@ X_mine, Y_mine = get_Y_and_X_percent(percentaged)
 X_mine = np.array(X_mine)#.reshape(-1, 1)
 #print(X_mine.shape)
 #print(Y_mine)
+
+from make_graphs import print_all_traindata
+
+print_all_traindata(X_mine, all_ids)
 
 
 gait_types = ["normal", "toe-walk", "flatfoot", "skew foot"]
