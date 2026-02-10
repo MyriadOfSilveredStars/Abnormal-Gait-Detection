@@ -81,19 +81,18 @@ def get_X_Y_Raw(virgin_data):
         X_stuff.append(ind_data["data"])
         Y_stuff.append(ind_data["type"])
 
+    #print(X_stuff)
     return X_stuff, Y_stuff
 
-all_ids = get_all_names(percentaged) #get all the ids for graphing
+all_ids = get_all_names(fouriered) #get all the ids for graphing
 
 
-X_mine, Y_mine = get_Y_and_X_percent(percentaged)
-#X_mine, Y_mine = get_Y_and_X_fourier(fouriered)
+#X_mine, Y_mine = get_Y_and_X_percent(percentaged)
+X_mine, Y_mine = get_Y_and_X_fourier(fouriered)
 #X_mine, Y_mine = get_X_Y_Raw(data)
 
-
-X_mine = np.array(X_mine)#.reshape(-1, 1)
+#X_mine = np.array(X_mine)#.reshape(-1, 1)
 #print(X_mine.shape)
-#print(Y_mine)
 
 from make_graphs import print_all_traindata
 

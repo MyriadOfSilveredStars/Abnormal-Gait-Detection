@@ -9,6 +9,36 @@ import os
 import re
 import statistics
 import numpy
+from matplotlib.backends.backend_pdf import PdfPages
+
+def print_all_traindata(train_data, all_ids):
+    #train data is the formatted data for the machine
+    #this is solely for the raw data
+
+    print(len(train_data))
+    print(len(all_ids))
+
+    id_counter = 0
+    os.chdir("..")
+    pdf = PdfPages('rawDataGraphs.pdf')
+
+    for ind in train_data:
+
+        plt.figure(figsize=(8,6))
+
+        plt.plot(ind["time"], ind["aT"])
+        plt.ylim(0, 100)
+        plt.title("Plot for " + all_ids[id_counter])
+        plt.xlabel("Time (seconds)")
+        plt.ylabel("Acceleration (m/s2)")
+
+        id_counter += 1
+
+        pdf.savefig()
+        plt.close()
+        #plt.show()
+    pdf.close()
+
 
 #change the directory so pandas can find the csv files
 def change_dir():
@@ -103,8 +133,33 @@ def get_everything():
 
     return extracted_csvs
 
+def get_all_names(dataset):
+    all_ids = []
+    for data in dataset:
+        all_ids.append(data["id"])
+
+    return all_ids
+
+def just_data(dataset):
+    all_data = []
+
+    for dict in dataset:
+        all_data.append(dict["data"])
+
+    return all_data
+
 def main_extract():
 
     return get_everything()
 
-#main_extract()
+#this just made a pdf with all the graphs printed into one
+#for ease and everything
+"""
+data = main_extract()
+names = get_all_names(data)
+just_data = just_data(data)
+
+print_all_traindata(just_data, names)
+"""
+
+

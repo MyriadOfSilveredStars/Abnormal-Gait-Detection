@@ -18,18 +18,19 @@ def print_all_traindata(train_data, all_ids):
 
     id_counter = 0
     os.chdir("..")
-    pdf = PdfPages('allGraphs.pdf')
+    pdf = PdfPages('fourieredGraphs.pdf')
 
     for ind in train_data:
+        #print(ind)
         x_axis = list(range(0, len(ind)))
 
         plt.figure(figsize=(8,6))
 
         plt.plot(x_axis, ind)
-        plt.ylim(-100, 800)
+        plt.ylim(0, 500)
         plt.title("Plot for " + all_ids[id_counter])
-        plt.xlabel("Time")
-        plt.ylabel("Peaks and Troughs of Acceleration")
+        plt.xlabel("I can't remember what this axis was supposed to be")
+        plt.ylabel("Frequency")
 
         id_counter += 1
 
