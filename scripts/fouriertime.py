@@ -79,7 +79,7 @@ def main_fourier(data_full):
             }
             all_chunklets.append(chunklet_dict)
 
-    #print(all_chunklets)
+    print(len(all_chunklets))
     return all_chunklets
 
 

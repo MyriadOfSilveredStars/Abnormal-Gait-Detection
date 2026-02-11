@@ -40,13 +40,13 @@ def get_all_names(dataset):
 
     return all_ids
 
-def get_Y_and_X_fourier(percentaged_dataset):
+def get_Y_and_X_fourier(fouriered_dataset):
     X_stuff = []
     Y_stuff = []
 
-    print(len(percentaged_dataset))
+    print(len(fouriered_dataset))
 
-    for chunklet in percentaged_dataset:
+    for chunklet in fouriered_dataset:
         X_stuff.append(chunklet["data"])
         Y_stuff.append(chunklet["type"])
 
@@ -87,17 +87,19 @@ def get_X_Y_Raw(virgin_data):
 all_ids = get_all_names(fouriered) #get all the ids for graphing
 
 
-#X_mine, Y_mine = get_Y_and_X_percent(percentaged)
-X_mine, Y_mine = get_Y_and_X_fourier(fouriered)
+X_mine, Y_mine = get_Y_and_X_percent(percentaged)
+#X_mine, Y_mine = get_Y_and_X_fourier(fouriered)
 #X_mine, Y_mine = get_X_Y_Raw(data)
 
 #X_mine = np.array(X_mine)#.reshape(-1, 1)
 #print(X_mine.shape)
 
-from make_graphs import print_all_traindata
 
-print_all_traindata(X_mine, all_ids)
+## MAKING GRAPHS BIT ##
+#from make_graphs import print_all_traindata
+#print_all_traindata(X_mine, all_ids)
 
+## CONTINUE TO MACHINE ##
 
 gait_types = ["normal", "toe-walk", "flatfoot", "skew foot"]
 gait_features = ["Total Acceleration m/s2"]
