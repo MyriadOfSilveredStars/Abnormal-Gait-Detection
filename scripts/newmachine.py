@@ -28,6 +28,43 @@ from percenttime import main_percent
 
 ## SOME METHODS AND THINGS ##
 
+def get_Y_and_X_fourier(fouriered_dataset):
+    X_stuff = []
+    Y_stuff = []
+
+    for chunklet in fouriered_dataset:
+        X_stuff.append(chunklet["data"])
+        Y_stuff.append(chunklet["type"])
+
+    return X_stuff, Y_stuff
+
+def get_Y_and_X_percent(percentaged_dataset):
+    X_stuff = []
+    Y_stuff = []
+
+    for ind_data in percentaged_dataset:
+        X_stuff.append(ind_data["data"])
+        Y_stuff.append(ind_data["type"])
+
+    #print("Data length:", len(X_stuff))
+    #print("Type length:", len(Y_stuff))
+
+    return X_stuff, Y_stuff
+
+def get_X_Y_Raw(virgin_data):
+    #this just gets x and y without changing the data
+    #either fourier or percentages
+    X_stuff = []
+    Y_stuff = []
+
+    #print(len(virgin_data))
+
+    for ind_data in virgin_data:
+        X_stuff.append(ind_data["data"])
+        Y_stuff.append(ind_data["type"])
+
+    return X_stuff, Y_stuff
+
 def get_training_testing(dataset, sample_no):
     training_set = []
 
@@ -54,69 +91,36 @@ def get_train_and_test(x, y, sampleNo):
     return testing_x, testing_y, training_x, training_y
 
 
-def split_x_and_y_training(dataset):
-    X_stuff = []
-    Y_stuff = []
-
-    for ind_data in dataset:
-        X_stuff.append(ind_data["data"])
-        Y_stuff.append(ind_data["type"])
-
-    print(len(Y_stuff))
-    print(len(X_stuff))
-
-    return X_stuff, Y_stuff
-
-def split_x_and_y_testing(data):
-    return data["data"], data["type"]
-
-def split_x_and_y(dataset):
-    X_stuff = []
-    Y_stuff = []
-
-    for ind_data in dataset:
-        X_stuff.append(ind_data["data"])
-        Y_stuff.append(ind_data["type"])
-
-    return X_stuff, Y_stuff
-
-
 ## THE... MACHINE... DUN DUN DUUUUN ##
 
-def deepthought(dataset):
+def deepthought(X, Y):
     #this takes the dataset and splits it
     #so each iteration takes one sample out and tests it against the rest
     #and then each iteration takes out a different sample
 
-    iterations = len(dataset) - 1
+    iterations = len(X) - 1
     all_accuracies = []
-
-    X_stuff, Y_stuff = split_x_and_y(dataset)
     
 
     for sample in range(0, iterations):
-        X_test, Y_test, X_train, Y_train = get_train_and_test(X_stuff, Y_stuff, sample)
-
-        print(len(X_train))
-        print(len(Y_train))
-
-        X_train = np.array(X_train)#.reshape(-1, 1)
-        X_test = np.array(X_test)#.reshape(-1, 1)
+        X_test, Y_test, X_train, Y_train = get_train_and_test(X, Y, sample)
 
         #print(len(X_train))
         #print(len(Y_train))
 
-        rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
-        rf_classifier.fit(X_train, Y_train)
+        X_train = np.array(X_train)#.reshape(-1, 1)
+        X_test = np.array(X_test)#.reshape(-1, 1)
 
-        Y_pred = rf_classifier.predict(X_test)
+        svm = SVC(kernel='linear')
+        svm.fit(X_train, Y_train)
 
-        accuracy = metrics.accuracy_score(Y_test, Y_pred)
-        all_accuracies.append(accuracy)
-        classification_rep = metrics.classification_report(Y_test, Y_pred)
+        y_pred_svm = svm.predict(X_test)
+        accuracy = metrics.accuracy_score(Y_test, y_pred_svm) * 100
 
-        print(f"Random Forest Accuracy: {accuracy:.2f}")
-        print("\nClassification Report:\n", classification_rep)
+        print("SVM Accuracy: " + str(accuracy) + "%")
+        print("\n")
+        print(metrics.classification_report(Y_test, y_pred_svm, zero_division=1))
+        print("\n\n")
 
     #return all_accuracies
 
@@ -126,11 +130,14 @@ def main():
     #fouriered = main_fourier(data)
     percentaged = main_percent(dataset) 
 
-    #print(percentaged)
+    X, Y = get_Y_and_X_percent(percentaged)
+    #X, Y = get_Y_and_X_fourier(fouriered)
+    #X, Y = get_X_Y_Raw(data)
 
-    accuracies = deepthought(percentaged)
+    accuracies = deepthought(X, Y)
     mean_accuracy = statistics.mean(accuracies)
     print("The Ultimate Accuracy Report:")
+    print(mean_accuracy + "%")
 
 main()
 

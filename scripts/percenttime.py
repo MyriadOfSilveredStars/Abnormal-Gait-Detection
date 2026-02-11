@@ -86,7 +86,7 @@ def main_percent(data_full):
 
         all_chunks = all_chunks + ind_data["data"]
 
-    print("\n The values have been changed to percentages of the mean:")
+    print("\n The values have been changed to percentages of the mean")
     #print(data_full[1])
     #print(all_chunks[1]["data"])
     #print("Number of chunks:", len(all_chunks[1]["data"]))
