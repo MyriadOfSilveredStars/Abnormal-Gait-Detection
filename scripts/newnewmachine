@@ -81,32 +81,37 @@ all_accuracies = []
 
 ## CONTINUE TO MACHINE ##
 
-print("\n\n")
+def deepthought(dataset, all_accuracies):
+    print("\n\n")
 
-for i in range(1, 10):
-    #separate out one person
-    train, test = get_train_test(percentaged, i)
+    for i in range(1, 10):
+        #separate out one person
+        train, test = get_train_test(dataset, i)
 
-    X_train, Y_train = get_X_and_Y(train)
-    X_test, Y_test = get_X_and_Y(test)
+        #then split the data into X and Y
+        X_train, Y_train = get_X_and_Y(train)
+        X_test, Y_test = get_X_and_Y(test)
 
-    X_train = np.array(X_train)#.reshape(-1, 1)
-    X_test = np.array(X_test)#.reshape(-1, 1)
-    
-    #Going to start with an SVM
+        #reshape to numpy arrays
+        X_train = np.array(X_train)#.reshape(-1, 1)
+        X_test = np.array(X_test)#.reshape(-1, 1)
+        
+        #Going to start with an SVM
 
-    try:
-        svm = SVC(kernel='linear')
-        svm.fit(X_train, Y_train)
-        y_pred_svm = svm.predict(X_test)
-        accuracy = metrics.accuracy_score(Y_test, y_pred_svm) * 100
+        try:
+            svm = SVC(kernel='linear')
+            svm.fit(X_train, Y_train)
+            y_pred_svm = svm.predict(X_test)
+            accuracy = metrics.accuracy_score(Y_test, y_pred_svm) * 100
 
-        print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
-        print("\n")
+            print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
+            print("\n")
 
-        all_accuracies.append(accuracy)
-    except:
-        print("I forgot to actually collect data from Volunteer 6\n\n")
+            all_accuracies.append(accuracy)
+        except:
+            print("I forgot to actually collect data from Volunteer 6\n\n")
 
-print("It's the final accuracy do do do doooo do do do do doooooo")
-print(str(statistics.mean(all_accuracies)) + "%")
+    print("It's the final accuracy do do do doooo do do do do doooooo")
+    print(str(statistics.mean(all_accuracies)) + "%")
+
+deepthought(fouriered, all_accuracies)
