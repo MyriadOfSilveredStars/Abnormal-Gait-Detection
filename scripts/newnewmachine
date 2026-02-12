@@ -1,5 +1,3 @@
-#This is the Machine. Hopefully. Model time
-
 
 ## IMPORTING LIBRARIES ##
 
@@ -115,3 +113,5 @@ def deepthought(dataset, all_accuracies):
     print(str(statistics.mean(all_accuracies)) + "%")
 
 deepthought(fouriered, all_accuracies)
+#to change which dataset is used, swap out the first parameter
+#either fouriered, percentaged, or raw
