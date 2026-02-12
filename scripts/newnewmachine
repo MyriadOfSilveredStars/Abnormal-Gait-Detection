@@ -1,0 +1,112 @@
+#This is the Machine. Hopefully. Model time
+
+
+## IMPORTING LIBRARIES ##
+
+import matplotlib.pyplot as plt
+import numpy as np
+import statistics
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import metrics
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
+
+## IMPORTING OWN MODULES ##
+
+from extract_data_new import main_extract
+#from find_avg import main_avg
+from fouriertime import main_fourier
+from percenttime import main_percent
+
+
+## SOME FUNCTIONS ##
+
+def get_all_names(dataset):
+    all_ids = []
+    for data in dataset:
+        all_ids.append(data["id"])
+
+    return all_ids    
+
+def get_train_test(dataset, volNo):
+    #splits the dataset into test and train data
+    #where one volunteer will become a test and the others, training
+    training = []
+    testing = []
+
+    for i in range(0, len(dataset)):
+        if dataset[i]["id"].find(str(volNo)) != -1:
+            testing.append(dataset[i])
+        else:
+            training.append(dataset[i])
+
+
+    return training, testing
+
+def get_X_and_Y(dataset):
+    #this separates the x and y values (data and type)
+    X_stuff = []
+    Y_stuff = []
+
+    #print("Length of Dataset:", len(dataset))
+
+    for ind_data in dataset:
+        X_stuff.append(ind_data["data"])
+        Y_stuff.append(ind_data["type"])
+
+    #print("Data length:", len(X_stuff))
+    #print("Type length:", len(Y_stuff))
+
+    return X_stuff, Y_stuff
+    
+## MY DATASET ##
+
+fouriered = main_fourier(main_extract()) #the data that is fouriered
+percentaged = main_percent(main_extract()) #the data that is percentaged
+raw = main_extract() # the unchanged data
+
+fouriered_length = len(fouriered) - 1
+percentaged_length = len(percentaged) - 1
+raw_length = len(raw) - 1
+
+all_accuracies = []
+
+## CONTINUE TO MACHINE ##
+
+print("\n\n")
+
+for i in range(1, 10):
+    #separate out one person
+    train, test = get_train_test(percentaged, i)
+
+    X_train, Y_train = get_X_and_Y(train)
+    X_test, Y_test = get_X_and_Y(test)
+
+    X_train = np.array(X_train)#.reshape(-1, 1)
+    X_test = np.array(X_test)#.reshape(-1, 1)
+    
+    #Going to start with an SVM
+
+    try:
+        svm = SVC(kernel='linear')
+        svm.fit(X_train, Y_train)
+        y_pred_svm = svm.predict(X_test)
+        accuracy = metrics.accuracy_score(Y_test, y_pred_svm) * 100
+
+        print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
+        print("\n")
+
+        all_accuracies.append(accuracy)
+    except:
+        print("I forgot to actually collect data from Volunteer 6\n\n")
+
+print("It's the final accuracy do do do doooo do do do do doooooo")
+print(str(statistics.mean(all_accuracies)) + "%")
