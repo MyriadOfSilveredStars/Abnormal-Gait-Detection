@@ -66,7 +66,7 @@ def get_Y_and_X_percent(percentaged_dataset):
 
     print("Data length:", len(X_stuff))
     print("Type length:", len(Y_stuff))
-
+ 
     return X_stuff, Y_stuff
 
 def get_X_Y_Raw(virgin_data):

@@ -20,6 +20,7 @@ from sklearn.preprocessing import LabelEncoder
 ## IMPORTING OWN MODULES ##
 
 from extract_data_new import main_extract
+from extract_data_new import cut_raw_chunks
 #from find_avg import main_avg
 from fouriertime import main_fourier
 from percenttime import main_percent
@@ -69,7 +70,7 @@ def get_X_and_Y(dataset):
 
 fouriered = main_fourier(main_extract()) #the data that is fouriered
 percentaged = main_percent(main_extract()) #the data that is percentaged
-raw = main_extract() # the unchanged data
+raw = cut_raw_chunks(main_extract()) # the unchanged data, cut down to 500 bit chunks
 
 fouriered_length = len(fouriered) - 1
 percentaged_length = len(percentaged) - 1
@@ -112,6 +113,6 @@ def deepthought(dataset, all_accuracies):
     print("It's the final accuracy do do do doooo do do do do doooooo")
     print(str(statistics.mean(all_accuracies)) + "%")
 
-deepthought(fouriered, all_accuracies)
+deepthought(raw, all_accuracies)
 #to change which dataset is used, swap out the first parameter
 #either fouriered, percentaged, or raw

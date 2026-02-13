@@ -80,6 +80,19 @@ def remove_outliers(data): #run this once we have the mean to remove any outlier
 
     return no_outliers
 
+def cut_raw_chunks(raw_data):
+    #call this method separately from the rest of the data extraction
+    
+    for ind in raw_data:
+        new_data = []
+        for i in range(0, 500): #we want the first 500 datapoints of the raw data
+            new_data.append(ind["data"]["aT"][i])
+        
+        ind["data"] = new_data
+
+    return raw_data
+
+
 
 def get_typing(data_id):
     g_type = "none"

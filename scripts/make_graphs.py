@@ -27,7 +27,7 @@ def print_all_traindata(train_data, all_ids):
         plt.figure(figsize=(8,6))
 
         plt.plot(x_axis, ind)
-        plt.ylim(0, 500)
+        plt.ylim(0, 1)
         plt.title("Plot for " + all_ids[id_counter])
         plt.xlabel("I can't remember what this axis was supposed to be")
         plt.ylabel("Frequency")
@@ -129,4 +129,4 @@ def main():
     except:
         print("The selection didn't return four indices so it broke :(")
 
-#main()
+main()
