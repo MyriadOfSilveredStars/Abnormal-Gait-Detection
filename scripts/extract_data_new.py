@@ -116,6 +116,7 @@ def get_typing(data_id):
 #use pandas to extract the csv data
 def read_csv(filename):
     #only extract the time and average acceleration for now, easy to modify later
+    all_cols_extract_csv = pd.read_csv(filename, usecols=["time", "ax", "ay", "az"])
     file_extract_csv = pd.read_csv(filename, usecols=["time", "aT"])
     name = filename.split(".")
 
