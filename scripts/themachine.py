@@ -20,6 +20,7 @@ from extract_data_new import main_extract
 #from find_avg import main_avg
 from fouriertime import main_fourier
 from percenttime import main_percent
+from make_graphs import print_all_traindata
     
 
 ## MY DATASET ##
@@ -87,8 +88,8 @@ def get_X_Y_Raw(virgin_data):
 all_ids = get_all_names(fouriered) #get all the ids for graphing
 
 
-X_mine, Y_mine = get_Y_and_X_percent(percentaged)
-#X_mine, Y_mine = get_Y_and_X_fourier(fouriered)
+#X_mine, Y_mine = get_Y_and_X_percent(percentaged)
+X_mine, Y_mine = get_Y_and_X_fourier(fouriered)
 #X_mine, Y_mine = get_X_Y_Raw(data)
 
 #X_mine = np.array(X_mine)#.reshape(-1, 1)
@@ -96,8 +97,7 @@ X_mine, Y_mine = get_Y_and_X_percent(percentaged)
 
 
 ## MAKING GRAPHS BIT ##
-#from make_graphs import print_all_traindata
-#print_all_traindata(X_mine, all_ids)
+print_all_traindata(X_mine, all_ids)
 
 ## CONTINUE TO MACHINE ##
 
