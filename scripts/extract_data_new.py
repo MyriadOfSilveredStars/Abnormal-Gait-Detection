@@ -129,7 +129,17 @@ def read_csv(filename):
         "type" : get_typing(name[0])
     }
 
+    all_file_extract = {
+        "id" : name[0],
+        "data" : all_cols_extract_csv,
+        "type" : get_typing(name[0])
+    }
+
     file_extract["data"]["aT"] = remove_outliers(file_extract)
+
+    all_file_extract["data"]["ax"] = numpy.array(all_file_extract["data"]["ax"]).reshape(-1, 1)
+    all_file_extract["data"]["ay"] = numpy.array(all_file_extract["data"]["ay"]).reshape(-1, 1)
+    all_file_extract["data"]["az"] = numpy.array(all_file_extract["data"]["az"]).reshape(-1,1)
 
     #print(file_extract["id"])
 
@@ -144,6 +154,7 @@ def get_everything():
     for csv in raw_csvs:
         temp = read_csv(csv)
         extracted_csvs.append(temp)
+
 
     return extracted_csvs
 

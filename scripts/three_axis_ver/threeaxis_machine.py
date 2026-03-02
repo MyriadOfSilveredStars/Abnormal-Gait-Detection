@@ -19,11 +19,23 @@ from sklearn.preprocessing import LabelEncoder
 
 ## IMPORTING OWN MODULES ##
 
-from extract_data_new import main_extract
-from extract_data_new import cut_raw_chunks
+from extract_3axis_data import get_everything
+#from extract_data_new import cut_raw_chunks
 #from find_avg import main_avg
-from fouriertime import main_fourier
-from percenttime import main_percent
+from threeaxis_fourier import main_fourier
+#from percenttime import main_percent
+
+## MY DATASET ##
+
+fouriered = main_fourier(get_everything()) #the data that is fouriered
+#percentaged = main_percent(main_extract()) #the data that is percentaged
+#raw = cut_raw_chunks(main_extract()) # the unchanged data, cut down to 500 bit chunks
+
+fouriered_length = len(fouriered) - 1
+#percentaged_length = len(percentaged) - 1
+#raw_length = len(raw) - 1
+
+all_accuracies = []
 
 
 ## SOME FUNCTIONS ##
@@ -47,7 +59,6 @@ def get_train_test(dataset, volNo):
         else:
             training.append(dataset[i])
 
-
     return training, testing
 
 def get_X_and_Y(dataset):
@@ -65,18 +76,7 @@ def get_X_and_Y(dataset):
     #print("Type length:", len(Y_stuff))
 
     return X_stuff, Y_stuff
-    
-## MY DATASET ##
 
-fouriered = main_fourier(main_extract()) #the data that is fouriered
-percentaged = main_percent(main_extract()) #the data that is percentaged
-raw = cut_raw_chunks(main_extract()) # the unchanged data, cut down to 500 bit chunks
-
-fouriered_length = len(fouriered) - 1
-percentaged_length = len(percentaged) - 1
-raw_length = len(raw) - 1
-
-all_accuracies = []
 
 ## CONTINUE TO MACHINE ##
 

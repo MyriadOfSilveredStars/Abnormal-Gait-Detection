@@ -14,24 +14,27 @@ def the_fourierr(chunklet):
     # output is 500 complex numbers. real + imaginary
 
     magout = np.abs(fftout) #magnitude spectrum. amount of each freq in signal. real numbers
+    magout = magout / np.max(magout) #normalises the data
 
-    magout = magout / np.max(magout) #normalises the data (?)
     #print(magout.shape)
     return magout #save that in the data part of the dictionary
 
 #code from https://bobbyhadz.com/blog/pandas-split-dataframe-into-chunks#split-a-pandas-dataframe-into-chunks-every-n-rows
+
 def split_every_n_rows(dataframe, chunk_size):
     chunks = []
-    num_chunks = len(dataframe) // chunk_size
+    num_chunks = (len(dataframe) // chunk_size)
+    #print(num_chunks)
 
-    for index in range(num_chunks):
-        chunks.append(dataframe[index * chunk_size:(index+1) * chunk_size])
+    for i in range(num_chunks):
+        chunks.append(dataframe[i * chunk_size:(i+1) * chunk_size])
 
     return chunks
 
 
 def the_chunkerr(data_sec):
     #print("Slicing data into chunks...")
+
     data_length = 500
     chunklet = split_every_n_rows(data_sec, data_length)
 
@@ -60,10 +63,10 @@ def main_fourier(data_full):
     # data here is an array of dictionaries, with an id and the dataframe for each
     # one element of an array is one volunteer's single gait type. 
     #print(data_full[5]["id"])
-    #print(data_full[5]["data"])
+    #print(data_full[5]["data"]["ax"])
 
     for sec in data_full:
-        sec["data"] = the_chunkerr(sec["data"]["aT"]) #change the data into the chunks
+        sec["data"] = the_chunkerr(sec["data"]["aT"]) #change the data into chunks
 
     #print(data_full[5]["data"])
 
@@ -71,7 +74,9 @@ def main_fourier(data_full):
     
     for chunk in data_full:
         gait_type = get_typing(chunk["id"])
+
         for chunklet in chunk["data"]:
+            print(chunklet)
             chunklet_dict = {
                 "id" : chunk["id"],
                 "data" : the_fourierr(chunklet),
@@ -79,7 +84,7 @@ def main_fourier(data_full):
             }
             all_chunklets.append(chunklet_dict)
 
-    print(len(all_chunklets))
+    #print(len(all_chunklets))
     return all_chunklets
 
 
