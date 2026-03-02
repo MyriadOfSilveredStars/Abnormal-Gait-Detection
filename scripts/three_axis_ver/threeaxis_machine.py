@@ -92,23 +92,24 @@ def deepthought(dataset, all_accuracies):
         X_test, Y_test = get_X_and_Y(test)
 
         #reshape to numpy arrays
-        X_train = np.array(X_train)#.reshape(-1, 1)
-        X_test = np.array(X_test)#.reshape(-1, 1)
+        X_train = np.array(X_train)
+        X_test = np.array(X_test)
         
         #Going to start with an SVM
 
-        try:
-            svm = SVC(kernel='linear')
-            svm.fit(X_train, Y_train)
-            y_pred_svm = svm.predict(X_test)
-            accuracy = metrics.accuracy_score(Y_test, y_pred_svm) * 100
+        
+        log_reg = LogisticRegression(max_iter=1000)
+        log_reg.fit(X_train, Y_train)
 
-            print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
-            print("\n")
+        Y_pred = log_reg.predict(X_test)
+        accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
 
-            all_accuracies.append(accuracy)
-        except:
-            print("I forgot to actually collect data from Volunteer 6\n\n")
+        print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
+        print("\n")
+
+        all_accuracies.append(accuracy)
+    
+            
 
     print("It's the final accuracy do do do doooo do do do do doooooo")
     print(str(statistics.mean(all_accuracies)) + "%")

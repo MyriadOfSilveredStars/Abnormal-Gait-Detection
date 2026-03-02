@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from extract_3axis_data import get_everything
 
@@ -12,13 +13,13 @@ def fourier(chunk):
     return magout #save that in the data part of the dictionary
 
 
-def fourier_caller(data):
+def fourier_caller(data_chunk):
     #calls the fourier transformer for each axis
 
-    for chunk in data:
-        chunk = fourier(chunk)
+    chunk = fourier(data_chunk)
+    chunk = pd.DataFrame(chunk, columns=["ax", "ay", "az"])
 
-    return data
+    return chunk
 
 
 def split_every_n_rows(data, chunk_size):
@@ -50,22 +51,23 @@ def main_fourier(data_full):
 
     for sec in data_full:
         gait_type = sec["type"]
-        
-        chunklet_dict = {
-            "id" : sec["id"],
-            "data" : fourier_caller(sec["data"]),
-            "type" : gait_type
-        }
-        
-        fourier_data.append(chunklet_dict)
+        for chunk in sec["data"]:
+            chunklet_dict = {
+                "id" : sec["id"],
+                "data" : fourier_caller(chunk),
+                "type" : gait_type
+            }
+            
+            fourier_data.append(chunklet_dict)
 
 
-    #print(fourier_data[0])
+    print(len(fourier_data))
     return fourier_data
 
 
 """
 all_data = get_everything()
+print(all_data[0])
 stuff = main_fourier(all_data)
 print("Successfully fouried shit")
 print(stuff[0])
