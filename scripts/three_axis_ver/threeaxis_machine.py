@@ -47,7 +47,7 @@ def get_all_names(dataset):
 
     return all_ids    
 
-def get_train_test(dataset, volNo):
+def get_train_test(dataset, volNo): #YOU ARE THE PROBLEM
     #splits the dataset into test and train data
     #where one volunteer will become a test and the others, training
     training = []
@@ -72,8 +72,12 @@ def get_X_and_Y(dataset):
         X_stuff.append(ind_data["data"])
         Y_stuff.append(ind_data["type"])
 
+    #print(np.array(X_stuff[0]))
     #print("Data length:", len(X_stuff))
     #print("Type length:", len(Y_stuff))
+
+    for chunk in X_stuff:
+        chunk = np.array(chunk).reshape(-1,1)
 
     return X_stuff, Y_stuff
 
@@ -83,31 +87,71 @@ def get_X_and_Y(dataset):
 def deepthought(dataset, all_accuracies):
     print("\n\n")
 
+    data_x = dataset[0]
+    data_y = dataset[1]
+    data_z = dataset[2]
+
+
     for i in range(1, 10):
         #separate out one person
-        train, test = get_train_test(dataset, i)
+        train_x, test_x = get_train_test(data_x, i)
+        train_y, test_y = get_train_test(data_y, i)
+        train_z, test_z = get_train_test(data_z, i)
 
-        #then split the data into X and Y
-        X_train, Y_train = get_X_and_Y(train)
-        X_test, Y_test = get_X_and_Y(test)
+        #then split the data into X (data) and Y (catagory)
+        X_train_x, Y_train_x = get_X_and_Y(train_x)
+        X_test_x, Y_test_x = get_X_and_Y(test_x)
 
-        #reshape to numpy arrays
-        X_train = np.array(X_train)
-        X_test = np.array(X_test)
+        X_train_y, Y_train_y = get_X_and_Y(train_y)
+        X_test_y, Y_test_y = get_X_and_Y(test_y)
+
+        X_train_z, Y_train_z = get_X_and_Y(train_z)
+        X_test_z, Y_test_z = get_X_and_Y(test_z)
+
+        #reshape to numpy arrays and squeeze to make 2d rather than 3d
+        X_train_x = np.array(X_train_x)
+        X_test_x = np.array(X_test_x)
+        X_train_x = X_train_x.squeeze()
+        X_test_x = X_test_x.squeeze()
+
+        X_train_y = np.array(X_train_y)
+        X_test_y = np.array(X_test_y)
+        X_train_y = X_train_y.squeeze()
+        X_test_y = X_test_y.squeeze()
+
+        X_train_z = np.array(X_train_z)
+        X_test_z = np.array(X_test_z)
+        X_train_z = X_train_z.squeeze()
+        X_test_z = X_test_z.squeeze()
         
         #Going to start with an SVM
 
-        
-        log_reg = LogisticRegression(max_iter=1000)
-        log_reg.fit(X_train, Y_train)
+        try:
 
-        Y_pred = log_reg.predict(X_test)
-        accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
+            log_reg_x = LogisticRegression(max_iter=1000)
+            log_reg_x.fit(X_train_x, Y_train_x)
+            Y_pred_x = log_reg_x.predict(X_test_x)
+            accuracy_x = metrics.accuracy_score(Y_test_x, Y_pred_x) * 100
 
-        print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
-        print("\n")
+            log_reg_y = LogisticRegression(max_iter=1000)
+            log_reg_y.fit(X_train_y, Y_train_y)
+            Y_pred_y = log_reg_y.predict(X_test_y)
+            accuracy_y = metrics.accuracy_score(Y_test_y, Y_pred_y) * 100
 
-        all_accuracies.append(accuracy)
+            log_reg_z = LogisticRegression(max_iter=1000)
+            log_reg_z.fit(X_train_z, Y_train_z)
+            Y_pred_z = log_reg_z.predict(X_test_z)
+            accuracy_z = metrics.accuracy_score(Y_test_z, Y_pred_z) * 100
+
+            accuracy = (accuracy_x + accuracy_y + accuracy_z) / 3
+
+            print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
+            print("\n")
+
+            all_accuracies.append(accuracy)
+
+        except:
+            print("Volunteer 6 never actually recorded data")
     
             
 

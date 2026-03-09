@@ -13,13 +13,15 @@ def fourier(chunk):
     return magout #save that in the data part of the dictionary
 
 
-def fourier_caller(data_chunk):
+def fourier_caller(data_chunk, column):
     #calls the fourier transformer for each axis
 
     chunk = fourier(data_chunk)
-    chunk = pd.DataFrame(chunk, columns=["ax", "ay", "az"])
+
+    chunk = pd.DataFrame(chunk, columns=[column])
 
     return chunk
+        
 
 
 def split_every_n_rows(data, chunk_size):
@@ -43,32 +45,59 @@ def chunk_it(data_section):
 def main_fourier(data_full):
     print("It's Fourier Time...")
 
-    fourier_data = []
+    fourier_data_x = []
+    fourier_data_y = []
+    fourier_data_z = []
 
     for sec in data_full:
-        sec["data"] = chunk_it(sec["data"])
+        sec["dataX"] = chunk_it(sec["dataX"])
+        sec["dataY"] = chunk_it(sec["dataY"])
+        sec["dataZ"] = chunk_it(sec["dataZ"])
 
+    print(len(data_full[0]["dataX"]))
 
     for sec in data_full:
         gait_type = sec["type"]
-        for chunk in sec["data"]:
+        for chunk in sec["dataX"]:
             chunklet_dict = {
                 "id" : sec["id"],
-                "data" : fourier_caller(chunk),
+                "data" : fourier_caller(chunk, "ax"),
                 "type" : gait_type
             }
             
-            fourier_data.append(chunklet_dict)
+            fourier_data_x.append(chunklet_dict)
 
+    for sec in data_full:
+        gait_type = sec["type"]
+        for chunk in sec["dataY"]:
+            chunklet_dict = {
+                "id" : sec["id"],
+                "data" : fourier_caller(chunk, "ay"),
+                "type" : gait_type
+            }
+            
+            fourier_data_y.append(chunklet_dict)
 
-    print(len(fourier_data))
-    return fourier_data
+    for sec in data_full:
+        gait_type = sec["type"]
+        for chunk in sec["dataZ"]:
+            chunklet_dict = {
+                "id" : sec["id"],
+                "data" : fourier_caller(chunk, "az"),
+                "type" : gait_type
+            }
+            
+            fourier_data_z.append(chunklet_dict)
+
+    #print(len(fourier_data_x))
+
+    return [fourier_data_x, fourier_data_y, fourier_data_z]
 
 
 """
 all_data = get_everything()
-print(all_data[0])
+#print(len(all_data))
 stuff = main_fourier(all_data)
 print("Successfully fouried shit")
-print(stuff[0])
+print(np.shape(stuff))
 """
