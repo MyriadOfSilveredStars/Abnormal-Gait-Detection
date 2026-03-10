@@ -54,7 +54,7 @@ def main_fourier(data_full):
         sec["dataY"] = chunk_it(sec["dataY"])
         sec["dataZ"] = chunk_it(sec["dataZ"])
 
-    print(len(data_full[0]["dataX"]))
+    #print(len(data_full[0]["dataX"]))
 
     for sec in data_full:
         gait_type = sec["type"]

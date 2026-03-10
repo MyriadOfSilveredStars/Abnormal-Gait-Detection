@@ -82,6 +82,36 @@ def get_X_and_Y(dataset):
     return X_stuff, Y_stuff
 
 
+## MACHINE ALGORITHMS CODE ##
+#by having 
+
+def LogisticRegression(X_train, Y_train, X_test, Y_test):
+    log_reg = LogisticRegression(max_iter=1000)
+    log_reg.fit(X_train, Y_train)
+
+    Y_pred = log_reg.predict(X_test)
+    accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
+    return accuracy
+
+def KNN(X_train, Y_train, X_test, Y_test):
+    knn = KNeighborsClassifier(n_neighbors=3)
+    knn.fit(X_train, Y_train)
+
+    Y_pred_knn = knn.predict(X_test)
+    accuracy = metrics.accuracy_score(Y_test, Y_pred_knn) * 100
+
+    return accuracy
+
+def SVM(X_train, Y_train, X_test, Y_test):
+    svm = SVC(kernel='linear')
+    svm.fit(X_train, Y_train)
+
+    Y_pred_svm = svm.predict(X_test)
+    accuracy = metrics.accuracy_score(Y_test, Y_pred_svm) * 100
+
+    return accuracy
+
+
 ## CONTINUE TO MACHINE ##
 
 def deepthought(dataset, all_accuracies):
@@ -124,24 +154,21 @@ def deepthought(dataset, all_accuracies):
         X_train_z = X_train_z.squeeze()
         X_test_z = X_test_z.squeeze()
         
-        #Going to start with an SVM
 
         try:
+            
+            accuracy_x = SVM(X_train_x, Y_train_x, X_test_x, Y_test_x)
+            accuracy_y = SVM(X_train_y, Y_train_y, X_test_y, Y_test_y)
+            accuracy_z = SVM(X_train_z, Y_train_z, X_test_z, Y_test_z)
 
-            log_reg_x = LogisticRegression(max_iter=1000)
-            log_reg_x.fit(X_train_x, Y_train_x)
-            Y_pred_x = log_reg_x.predict(X_test_x)
-            accuracy_x = metrics.accuracy_score(Y_test_x, Y_pred_x) * 100
+            print("X-axis accuracy: " + str(accuracy_x) + "%")
+            print("Y-axis accuracy: " + str(accuracy_y) + "%")
+            print("Z-axis accuracy: " + str(accuracy_z) + "%")
 
-            log_reg_y = LogisticRegression(max_iter=1000)
-            log_reg_y.fit(X_train_y, Y_train_y)
-            Y_pred_y = log_reg_y.predict(X_test_y)
-            accuracy_y = metrics.accuracy_score(Y_test_y, Y_pred_y) * 100
-
-            log_reg_z = LogisticRegression(max_iter=1000)
-            log_reg_z.fit(X_train_z, Y_train_z)
-            Y_pred_z = log_reg_z.predict(X_test_z)
-            accuracy_z = metrics.accuracy_score(Y_test_z, Y_pred_z) * 100
+            #log_reg_x = LogisticRegression(max_iter=1000)
+            #log_reg_x.fit(X_train_x, Y_train_x)
+            #Y_pred_x = log_reg_x.predict(X_test_x)
+            #accuracy_x = metrics.accuracy_score(Y_test_x, Y_pred_x) * 100
 
             accuracy = (accuracy_x + accuracy_y + accuracy_z) / 3
 
@@ -151,7 +178,7 @@ def deepthought(dataset, all_accuracies):
             all_accuracies.append(accuracy)
 
         except:
-            print("Volunteer 6 never actually recorded data")
+            print("Volunteer 6 never actually recorded data\n\n")
     
             
 

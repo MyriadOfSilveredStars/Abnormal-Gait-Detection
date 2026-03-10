@@ -8,7 +8,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 #from clean_files import main_clean
 from extract_data_new import main_extract
-from percenttime import main_percent
+from percenttime import the_percenterr
 
 def print_all_traindata(train_data, all_ids):
     #train data is the formatted data for the machine
@@ -78,7 +78,7 @@ def draw_percent_graphs(data):
     axs[1, 1].set_title(data[data4]["id"])
 
     for ax in axs.flat:
-        ax.set(xlabel='Arbitrary Unit', ylabel='Percentage of Difference from Mean Acceleration', ylim = (-100, 800))
+        ax.set(xlabel='Datapoints Through Time (seconds)', ylabel='Percentage of Difference from Mean Acceleration', ylim = (-100, 800))
 
     # Hide x labels and tick labels for top plots and y ticks for right plots.
     for ax in axs.flat:
@@ -121,12 +121,14 @@ def main():
     #main_clean() #only need to call this if new files have been added
 
     graph_data = main_extract()
-    percent_data = main_percent(graph_data)
+
+    for ind_data in graph_data:
+        ind_data["data"] = the_percenterr(ind_data)
 
     try:
         #draw_graph(graph_data)
-        draw_percent_graphs(percent_data)
+        draw_percent_graphs(graph_data)
     except:
         print("The selection didn't return four indices so it broke :(")
 
-#main()
+main()
