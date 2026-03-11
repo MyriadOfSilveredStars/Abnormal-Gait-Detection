@@ -83,7 +83,7 @@ def get_X_and_Y(dataset):
 
 
 ## MACHINE ALGORITHMS CODE ##
-#by having 
+#by having one of each machine, I can call them repeatedly
 
 def LogisticRegression(X_train, Y_train, X_test, Y_test):
     log_reg = LogisticRegression(max_iter=1000)
@@ -109,6 +109,23 @@ def SVM(X_train, Y_train, X_test, Y_test):
     Y_pred_svm = svm.predict(X_test)
     accuracy = metrics.accuracy_score(Y_test, Y_pred_svm) * 100
 
+    return accuracy
+
+def DecisionTree(X_train, Y_train, X_test, Y_test):
+    tree = DecisionTreeClassifier(max_depth=5)
+    tree.fit(X_train, Y_train)
+    Y_pred_tree = tree.predict(X_test)
+
+    accuracy = metrics.accuracy_score(Y_test, Y_pred_tree) * 100
+    return accuracy
+
+def RandomForest(X_train, Y_train, X_test, Y_test):
+    rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf_classifier.fit(X_train, Y_train)
+
+    Y_pred = rf_classifier.predict(X_test)
+
+    accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
     return accuracy
 
 
@@ -157,9 +174,9 @@ def deepthought(dataset, all_accuracies):
 
         try:
             
-            accuracy_x = SVM(X_train_x, Y_train_x, X_test_x, Y_test_x)
-            accuracy_y = SVM(X_train_y, Y_train_y, X_test_y, Y_test_y)
-            accuracy_z = SVM(X_train_z, Y_train_z, X_test_z, Y_test_z)
+            accuracy_x = RandomForest(X_train_x, Y_train_x, X_test_x, Y_test_x)
+            accuracy_y = RandomForest(X_train_y, Y_train_y, X_test_y, Y_test_y)
+            accuracy_z = RandomForest(X_train_z, Y_train_z, X_test_z, Y_test_z)
 
             print("X-axis accuracy: " + str(accuracy_x) + "%")
             print("Y-axis accuracy: " + str(accuracy_y) + "%")
