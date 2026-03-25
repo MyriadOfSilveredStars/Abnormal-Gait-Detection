@@ -98,13 +98,11 @@ def deepthought(dataset, all_accuracies):
         #Going to start with an SVM
 
         try:
-            svm = SVC(kernel='linear')
-            svm.fit(X_train, Y_train)
-            y_pred_svm = svm.predict(X_test)
-            accuracy = metrics.accuracy_score(Y_test, y_pred_svm) * 100
+            tree = DecisionTreeClassifier(max_depth=5)
+            tree.fit(X_train, Y_train)
+            Y_pred_tree = tree.predict(X_test)
 
-            print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
-            print("\n")
+            accuracy = metrics.accuracy_score(Y_test, Y_pred_tree) * 100
 
             all_accuracies.append(accuracy)
         except:
@@ -113,6 +111,6 @@ def deepthought(dataset, all_accuracies):
     print("It's the final accuracy do do do doooo do do do do doooooo")
     print(str(statistics.mean(all_accuracies)) + "%")
 
-deepthought(fouriered, all_accuracies)
+deepthought(percentaged, all_accuracies)
 #to change which dataset is used, swap out the first parameter
 #either fouriered, percentaged, or raw

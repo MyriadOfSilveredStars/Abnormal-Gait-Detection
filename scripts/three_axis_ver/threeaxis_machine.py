@@ -17,6 +17,9 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 
+import os
+from matplotlib.backends.backend_pdf import PdfPages
+
 ## IMPORTING OWN MODULES ##
 
 from extract_3axis_data import get_everything
@@ -93,40 +96,63 @@ def LogisticRegression(X_train, Y_train, X_test, Y_test):
     accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
     return accuracy
 
-def KNN(X_train, Y_train, X_test, Y_test):
+def KNN(X_train, Y_train, X_test, Y_test, volID, axis, file):
     knn = KNeighborsClassifier(n_neighbors=3)
     knn.fit(X_train, Y_train)
 
     Y_pred_knn = knn.predict(X_test)
     accuracy = metrics.accuracy_score(Y_test, Y_pred_knn) * 100
 
+    confuseddotcom(Y_test, Y_pred_knn, volID, axis, file)
+
     return accuracy
 
-def SVM(X_train, Y_train, X_test, Y_test):
+def SVM(X_train, Y_train, X_test, Y_test, volID, axis, file):
     svm = SVC(kernel='linear')
     svm.fit(X_train, Y_train)
 
     Y_pred_svm = svm.predict(X_test)
     accuracy = metrics.accuracy_score(Y_test, Y_pred_svm) * 100
 
+    confuseddotcom(Y_test, Y_pred_svm, volID, axis, file)
+
     return accuracy
 
-def DecisionTree(X_train, Y_train, X_test, Y_test):
+def DecisionTree(X_train, Y_train, X_test, Y_test, volID, axis, file):
     tree = DecisionTreeClassifier(max_depth=5)
     tree.fit(X_train, Y_train)
     Y_pred_tree = tree.predict(X_test)
 
     accuracy = metrics.accuracy_score(Y_test, Y_pred_tree) * 100
+
+    confuseddotcom(Y_test, Y_pred_tree, volID, axis, file)
+
     return accuracy
 
-def RandomForest(X_train, Y_train, X_test, Y_test):
+def RandomForest(X_train, Y_train, X_test, Y_test, volID, axis, file):
     rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
     rf_classifier.fit(X_train, Y_train)
 
     Y_pred = rf_classifier.predict(X_test)
 
     accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
+    confuseddotcom(Y_test, Y_pred, volID, axis, file)
     return accuracy
+
+
+## CONFUSION MATRIX MAKER ##
+
+def confuseddotcom(Y_test, Y_pred, volNo, axis, file):
+    gait_types = ["normal", "toe-walk", "flatfoot", "skew foot"]
+    cm = confusion_matrix(Y_test, Y_pred)
+
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=gait_types)
+    disp.plot(cmap=plt.cm.Blues)
+    plt.title('Confusion Matrix for Volunteer ' + str(volNo) + " : " + axis + "-axis")
+    
+    #plt.show()
+    file.savefig()
+    plt.close()
 
 
 ## CONTINUE TO MACHINE ##
@@ -137,6 +163,10 @@ def deepthought(dataset, all_accuracies):
     data_x = dataset[0]
     data_y = dataset[1]
     data_z = dataset[2]
+
+    os.chdir("..")
+    os.chdir("confusion_matrices")
+    pdf = PdfPages('3A_CM_DecisionTree_Fourier.pdf')
 
 
     for i in range(1, 10):
@@ -174,18 +204,13 @@ def deepthought(dataset, all_accuracies):
 
         try:
             
-            accuracy_x = RandomForest(X_train_x, Y_train_x, X_test_x, Y_test_x)
-            accuracy_y = RandomForest(X_train_y, Y_train_y, X_test_y, Y_test_y)
-            accuracy_z = RandomForest(X_train_z, Y_train_z, X_test_z, Y_test_z)
+            accuracy_x = DecisionTree(X_train_x, Y_train_x, X_test_x, Y_test_x, i, "X", pdf)
+            accuracy_y = DecisionTree(X_train_y, Y_train_y, X_test_y, Y_test_y, i, "Y", pdf)
+            accuracy_z = DecisionTree(X_train_z, Y_train_z, X_test_z, Y_test_z, i, "Z", pdf)
 
             print("X-axis accuracy: " + str(accuracy_x) + "%")
             print("Y-axis accuracy: " + str(accuracy_y) + "%")
             print("Z-axis accuracy: " + str(accuracy_z) + "%")
-
-            #log_reg_x = LogisticRegression(max_iter=1000)
-            #log_reg_x.fit(X_train_x, Y_train_x)
-            #Y_pred_x = log_reg_x.predict(X_test_x)
-            #accuracy_x = metrics.accuracy_score(Y_test_x, Y_pred_x) * 100
 
             accuracy = (accuracy_x + accuracy_y + accuracy_z) / 3
 
@@ -198,7 +223,7 @@ def deepthought(dataset, all_accuracies):
             print("Volunteer 6 never actually recorded data\n\n")
     
             
-
+    pdf.close()
     print("It's the final accuracy do do do doooo do do do do doooooo")
     print(str(statistics.mean(all_accuracies)) + "%")
 

@@ -31,7 +31,7 @@ def find_troughs_peaks(ind_data):
         peaks_n_troughs.append(biggest)
         peaks_n_troughs.append(smallest)
 
-    #del peaks_n_troughs[200:num_values-1]
+    del peaks_n_troughs[200:num_values-1]
 
     #print(len(peaks_n_troughs))
     return peaks_n_troughs
