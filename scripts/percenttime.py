@@ -38,7 +38,7 @@ def find_troughs_peaks(ind_data):
 
 def tiny_chunks(ind_data):
     #takes the list of peaks and troughs and divvies it into small chunks
-    #of about 20, say, for Peak Data Levels
+    #of about 200, say, for Peak Data Levels
     chunk_size = 200
     splice_list = []
 

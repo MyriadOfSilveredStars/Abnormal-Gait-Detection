@@ -27,15 +27,19 @@ from extract_3axis_data import get_everything
 #from find_avg import main_avg
 from threeaxis_fourier import main_fourier
 #from percenttime import main_percent
+from threeaxis_percenter import main_percent
 
 ## MY DATASET ##
+all_data = get_everything()
 
-fouriered = main_fourier(get_everything()) #the data that is fouriered
-#percentaged = main_percent(main_extract()) #the data that is percentaged
+fouriered = main_fourier(all_data) #the data that is fouriered
+print(np.shape(fouriered))
+percentaged = main_percent(get_everything()) #the data that is percentaged
+print(np.shape(fouriered))
 #raw = cut_raw_chunks(main_extract()) # the unchanged data, cut down to 500 bit chunks
 
 fouriered_length = len(fouriered) - 1
-#percentaged_length = len(percentaged) - 1
+percentaged_length = len(percentaged) - 1
 #raw_length = len(raw) - 1
 
 all_accuracies = []
@@ -88,12 +92,14 @@ def get_X_and_Y(dataset):
 ## MACHINE ALGORITHMS CODE ##
 #by having one of each machine, I can call them repeatedly
 
-def LogisticRegression(X_train, Y_train, X_test, Y_test):
+def LogisticRegression(X_train, Y_train, X_test, Y_test, volID, axis, file):
     log_reg = LogisticRegression(max_iter=1000)
     log_reg.fit(X_train, Y_train)
 
     Y_pred = log_reg.predict(X_test)
     accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
+
+    confuseddotcom(Y_test, Y_pred, volID, axis, file)
     return accuracy
 
 def KNN(X_train, Y_train, X_test, Y_test, volID, axis, file):
@@ -125,7 +131,7 @@ def DecisionTree(X_train, Y_train, X_test, Y_test, volID, axis, file):
 
     accuracy = metrics.accuracy_score(Y_test, Y_pred_tree) * 100
 
-    confuseddotcom(Y_test, Y_pred_tree, volID, axis, file)
+    #confuseddotcom(Y_test, Y_pred_tree, volID, axis, file)
 
     return accuracy
 
@@ -136,7 +142,7 @@ def RandomForest(X_train, Y_train, X_test, Y_test, volID, axis, file):
     Y_pred = rf_classifier.predict(X_test)
 
     accuracy = metrics.accuracy_score(Y_test, Y_pred) * 100
-    confuseddotcom(Y_test, Y_pred, volID, axis, file)
+    #confuseddotcom(Y_test, Y_pred, volID, axis, file)
     return accuracy
 
 
@@ -166,7 +172,7 @@ def deepthought(dataset, all_accuracies):
 
     os.chdir("..")
     os.chdir("confusion_matrices")
-    pdf = PdfPages('3A_CM_DecisionTree_Fourier.pdf')
+    pdf = PdfPages('3A_CM_LogisticRegression_Percentage.pdf')
 
 
     for i in range(1, 10):
@@ -202,31 +208,30 @@ def deepthought(dataset, all_accuracies):
         X_test_z = X_test_z.squeeze()
         
 
-        try:
+        
             
-            accuracy_x = DecisionTree(X_train_x, Y_train_x, X_test_x, Y_test_x, i, "X", pdf)
-            accuracy_y = DecisionTree(X_train_y, Y_train_y, X_test_y, Y_test_y, i, "Y", pdf)
-            accuracy_z = DecisionTree(X_train_z, Y_train_z, X_test_z, Y_test_z, i, "Z", pdf)
+        accuracy_x = LogisticRegression(X_train_x, Y_train_x, X_test_x, Y_test_x, i, "X", pdf)
+        accuracy_y = LogisticRegression(X_train_y, Y_train_y, X_test_y, Y_test_y, i, "Y", pdf)
+        accuracy_z = LogisticRegression(X_train_z, Y_train_z, X_test_z, Y_test_z, i, "Z", pdf)
 
-            print("X-axis accuracy: " + str(accuracy_x) + "%")
-            print("Y-axis accuracy: " + str(accuracy_y) + "%")
-            print("Z-axis accuracy: " + str(accuracy_z) + "%")
+        print("X-axis accuracy: " + str(accuracy_x) + "%")
+        print("Y-axis accuracy: " + str(accuracy_y) + "%")
+        print("Z-axis accuracy: " + str(accuracy_z) + "%")
 
-            accuracy = (accuracy_x + accuracy_y + accuracy_z) / 3
+        accuracy = (accuracy_x + accuracy_y + accuracy_z) / 3
 
-            print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
-            print("\n")
+        print("Round " + str(i) + " Accuracy: " + str(accuracy) + "%")
+        print("\n")
 
-            all_accuracies.append(accuracy)
+        all_accuracies.append(accuracy)
 
-        except:
-            print("Volunteer 6 never actually recorded data\n\n")
+        
     
             
     pdf.close()
     print("It's the final accuracy do do do doooo do do do do doooooo")
     print(str(statistics.mean(all_accuracies)) + "%")
 
-deepthought(fouriered, all_accuracies)
+deepthought(percentaged, all_accuracies)
 #to change which dataset is used, swap out the first parameter
 #either fouriered, percentaged, or raw
